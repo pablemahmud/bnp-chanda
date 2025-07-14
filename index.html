@@ -3,85 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>বি এন পি'র চাঁদার হিসাব</title>
+  <title>চাঁদার হিসাব</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f7f7f7;
+      font-family: 'Noto Sans Bengali', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
       margin: 0;
       padding: 0;
+    }
+    h1 {
       text-align: center;
-    }
-    header {
-      background-color: #002147;
-      color: white;
-      padding: 20px 0;
-      font-size: 26px;
-    }
-    table {
-      width: 90%;
-      margin: 30px auto;
-      border-collapse: collapse;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      background-color: white;
-    }
-    th, td {
-      padding: 15px;
-      border: 1px solid #ddd;
-    }
-    th {
-      background-color: #004080;
-      color: white;
-    }
-    tr:hover {
-      background-color: #f1f1f1;
-    }
-    footer {
-      margin-top: 30px;
+      background-color: #004d40;
+      color: #ffffff;
       padding: 20px;
-      font-size: 14px;
-      color: gray;
+      margin: 0;
+      font-size: 28px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+      color: #333;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: 0.3s;
+    }
+    select:focus, input:focus {
+      border-color: #00796b;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0,121,107,0.4);
+    }
+    .output {
+      font-weight: bold;
+      margin-top: 25px;
+      font-size: 20px;
+      color: #00695c;
+      text-align: center;
     }
   </style>
 </head>
 <body>
+  <h1>বি এন পি'র চাঁদার হিসাব</h1>
+  <div class="container">
+    <label for="category">ক্যাটাগরি সিলেক্ট করুন:</label>
+    <select id="category" onchange="loadOptions()">
+      <option value="">-- নির্বাচন করুন --</option>
+      <option value="education">শিক্ষা</option>
+      <option value="medical">চিকিৎসা</option>
+      <option value="media">মিডিয়া</option>
+    </select>
 
-  <header>বি এন পি'র চাঁদার হিসাব</header>
+    <label for="profession">পেশা:</label>
+    <select id="profession"></select>
 
-  <table>
-    <tr>
-      <th>পেশা</th>
-      <th>মাসিক আয়</th>
-      <th>চাঁদা নির্ধারণ</th>
-    </tr>
-    <tr>
-      <td>স্কুল শিক্ষক</td>
-      <td>২৫,০০০৳</td>
-      <td>৫০০৳</td>
-    </tr>
-    <tr>
-      <td>গার্মেন্টস কর্মী</td>
-      <td>১০,০০০৳</td>
-      <td>২০০৳</td>
-    </tr>
-    <tr>
-      <td>ইউটিউবার</td>
-      <td>৭০,০০০৳</td>
-      <td>৫,০০০৳</td>
-    </tr>
-    <tr>
-      <td>বিদেশফেরত</td>
-      <td>১,২০,০০০৳</td>
-      <td>১০,০০০৳</td>
-    </tr>
-    <tr>
-      <td>আলু চাষী</td>
-      <td>১৫,০০০৳</td>
-      <td>১০০৳ (আলু সহ)</td>
-    </tr>
-  </table>
+    <label for="income">মাসিক আয় (৳):</label>
+    <input type="number" id="income" placeholder="যেমন: ২৫০০০">
 
-  <footer>এই হিসাব শুধুমাত্র বিনোদনের উদ্দেশ্যে বানানো হয়েছে 😅</footer>
+    <label for="percentage">চাঁদার হার (%):</label>
+    <input type="number" id="percentage" placeholder="যেমন: ১০">
 
+    <div class="output" id="output">চাঁদার পরিমাণ দেখুন এখানে...</div>
+  </div>
+
+  <script>
+    const professions = {
+      education: ["স্কুল শিক্ষক", "কলেজ শিক্ষক", "প্রাইভেট টিচার"],
+      medical: ["ডাক্তার", "নার্স", "ফার্মাসিস্ট"],
+      media: ["ইউটিউবার", "ব্লগার", "রেডিও জকি"]
+    };
+
+    function loadOptions() {
+      const category = document.getElementById("category").value;
+      const professionSelect = document.getElementById("profession");
+      professionSelect.innerHTML = "";
+
+      if (category && professions[category]) {
+        professions[category].forEach(prof => {
+          const option = document.createElement("option");
+          option.text = prof;
+          option.value = prof;
+          professionSelect.add(option);
+        });
+      }
+    }
+
+    document.getElementById("income").addEventListener("input", calculate);
+    document.getElementById("percentage").addEventListener("input", calculate);
+
+    function calculate() {
+      const income = parseFloat(document.getElementById("income").value);
+      const percent = parseFloat(document.getElementById("percentage").value);
+      const output = document.getElementById("output");
+
+      if (!isNaN(income) && !isNaN(percent)) {
+        const chanda = (income * percent / 100).toFixed(2);
+        output.textContent = `চাঁদা দিতে হবে: ${chanda} টাকা`;
+      } else {
+        output.textContent = "চাঁদার পরিমাণ দেখুন এখানে...";
+      }
+    }
+  </script>
 </body>
 </html>
